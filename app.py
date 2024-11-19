@@ -19,6 +19,8 @@ app.config['SWAGGER'] = {
 }
 swagger = Swagger(app)
 
+
+
 @app.route('/')
 def index():
     return redirect('/apidocs')
@@ -59,4 +61,4 @@ def get_students():
     return jsonify(students)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True)    
