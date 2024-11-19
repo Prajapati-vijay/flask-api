@@ -6,7 +6,7 @@ from flasgger import Swagger
 app = Flask(__name__)
 
 # Replace with your SQL Server connection details
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://SA:vijay123@doker.host.internal/student?driver=ODBC+Driver+17+for+SQL+Server'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://SA:vijay123@docker.host.internal/student?driver=ODBC+Driver+17+for+SQL+Server'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Set application root if served behind a reverse proxy with a prefix (e.g., "/flask")
