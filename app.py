@@ -6,16 +6,25 @@ from flasgger import Swagger
 app = Flask(__name__)
 
 # Replace with your SQL Server connection details
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://SA:vijay123@docker.host.internal/student?driver=ODBC+Driver+17+for+SQL+Server'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://SA:vijay123@host.docker.internal/student?driver=ODBC+Driver+17+for+SQL+Server'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Set application root if served behind a reverse proxy with a prefix (e.g., "/flask")
-app.config['APPLICATION_ROOT'] = '/flaskapi'
+app.config['APPLICATION_ROOT'] = '/flask'
 
 db = SQLAlchemy(app)
 
 # Configure Swagger
 swagger = Swagger(app)
+
+@app.before_request
+def handle_script_name():
+    """
+    Adjust Flask's SCRIPT_NAME to respect Traefik's path prefix.
+    """
+    if 'X-Script-Name' in request.headers:
+        prefix = request.headers['X-Script-Name']
+        request.environ['SCRIPT_NAME'] = prefix
 
 @app.route('/')
 def index():
@@ -61,4 +70,4 @@ def get_students():
 
 if __name__ == '__main__':
     # Ensure Flask respects the application root when running in Docker
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
