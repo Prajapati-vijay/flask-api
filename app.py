@@ -1,30 +1,27 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, redirect, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 from flasgger import Swagger
-from flask import redirect
 
 app = Flask(__name__)
 
 # Replace with your SQL Server connection details
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://SA:vijay123@doker.host.internal/student?driver=ODBC+Driver+17+for+SQL+Server'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://SA:vijay123@docker.host.internal/student?driver=ODBC+Driver+17+for+SQL+Server'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# Set Swagger UI URL to root `/`
-app.config['SWAGGER'] = {
-    'uiversion': 3,
-    'openapi': '3.0.2'
-}
+# Configure Swagger
 swagger = Swagger(app)
-
-
 
 @app.route('/')
 def index():
-    return redirect('/apidocs')
-
+    """
+    Redirect to the Swagger docs, dynamically handling the base path.
+    """
+    # Get the base URL (path_prefix) dynamically from the request
+    base_url = request.script_root or ""
+    return redirect(f"{base_url}/apidocs")
 
 @app.route('/students', methods=['GET'])
 def get_students():
@@ -61,4 +58,4 @@ def get_students():
     return jsonify(students)
 
 if __name__ == '__main__':
-    app.run(debug=True)    
+    app.run(debug=True)
