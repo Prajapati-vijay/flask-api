@@ -6,8 +6,11 @@ from flasgger import Swagger
 app = Flask(__name__)
 
 # Replace with your SQL Server connection details
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://SA:vijay123@docker.host.internal/student?driver=ODBC+Driver+17+for+SQL+Server'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://SA:vijay123@doker.host.internal/student?driver=ODBC+Driver+17+for+SQL+Server'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Set application root if served behind a reverse proxy with a prefix (e.g., "/flask")
+app.config['APPLICATION_ROOT'] = '/flaskapi'
 
 db = SQLAlchemy(app)
 
@@ -19,9 +22,8 @@ def index():
     """
     Redirect to the Swagger docs, dynamically handling the base path.
     """
-    # Get the base URL (path_prefix) dynamically from the request
-    base_url = request.script_root or ""
-    return redirect(f"{base_url}/apidocs")
+    # Dynamically generate the URL for the Swagger docs
+    return redirect(url_for('flasgger.apidocs'))
 
 @app.route('/students', methods=['GET'])
 def get_students():
@@ -58,4 +60,5 @@ def get_students():
     return jsonify(students)
 
 if __name__ == '__main__':
+    # Ensure Flask respects the application root when running in Docker
     app.run(debug=True)
