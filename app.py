@@ -10,29 +10,11 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://SA:vijay123@host.docker.
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 # Set application root if served behind a reverse proxy with a prefix (e.g., "/flask")
-app.config['APPLICATION_ROOT'] = '/flask'
 
 db = SQLAlchemy(app)
 
 # Configure Swagger
 swagger = Swagger(app)
-
-@app.before_request
-def handle_script_name():
-    """
-    Adjust Flask's SCRIPT_NAME to respect Traefik's path prefix.
-    """
-    if 'X-Script-Name' in request.headers:
-        prefix = request.headers['X-Script-Name']
-        request.environ['SCRIPT_NAME'] = prefix
-
-@app.route('/')
-def index():
-    """
-    Redirect to the Swagger docs, dynamically handling the base path.
-    """
-    # Dynamically generate the URL for the Swagger docs
-    return redirect(url_for('flasgger.apidocs'))
 
 @app.route('/students', methods=['GET'])
 def get_students():
