@@ -73,7 +73,7 @@ from flask import redirect
 app = Flask(__name__)
 
 # Replace with your PostgreSQL connection details
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@webdb:5432/student'  
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@172.21.0.3:5432/student'  
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
