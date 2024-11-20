@@ -70,9 +70,11 @@
 
 
 
-from flask import Flask, Blueprint
+
+from flask import Flask, Blueprint, send_from_directory
 from flask_restx import Api, Resource
 from flask_sqlalchemy import SQLAlchemy
+import os
 
 # Configuration
 class Config:
@@ -84,7 +86,7 @@ app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 
-# Create a Blueprint for the '/flask' prefix
+# Create a Blueprint for the '/flaskapi' prefix
 flask_blueprint = Blueprint('flaskapi', __name__, url_prefix='/flaskapi')
 
 # Initialize the API with the Blueprint
@@ -93,11 +95,19 @@ api = Api(
     version='1.0',
     title='Student API',
     description='API for student data',
-    doc='/docs',  # Serve Swagger UI under /flask/docs
-    static_url_path='/swaggerui',  # Serve Swagger assets
+    doc='/docs',  # Swagger UI will be served under /flaskapi/docs
+    static_url_path='/swaggerui',  # Serve Swagger assets under /swaggerui
 )
 
+# Register the Blueprint with the app
 app.register_blueprint(flask_blueprint)
+
+# Serve Swagger UI assets (CSS, JS) from the 'swagger_ui' folder
+@app.route('/flaskapi/swaggerui/<path:filename>')
+def swagger_ui_static(filename):
+    # Serve files from the 'swagger_ui' directory located in the 'static' folder
+    swagger_ui_folder = os.path.join(app.static_folder, 'swagger_ui')
+    return send_from_directory(swagger_ui_folder, filename)
 
 # Define API Endpoints
 @api.route('/students')
