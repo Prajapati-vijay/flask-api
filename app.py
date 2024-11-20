@@ -20,7 +20,7 @@ app.config['SWAGGER'] = {
     'specs_route': f'{SWAGGER_URL_PREFIX}/apidocs/'  # Use the prefix
 }
 
-swagger = Swagger(app)
+swagger = Swagger(app,static_url_path='/fastapi/flasgger_static')
 
 @app.route(f'{SWAGGER_URL_PREFIX}/students', methods=['GET'])
 def get_students():
