@@ -70,8 +70,8 @@
 
 
 
-from flask import Flask
-from flask_restx import Api, Resource, fields
+from flask import Flask, Blueprint
+from flask_restx import Api, Resource
 from flask_sqlalchemy import SQLAlchemy
 
 # Configuration
@@ -84,31 +84,28 @@ app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 
-# Initialize the API
-api = Api(app, version='1.0', title='Student API', description='API for student data', doc='/docs')  
+# Create a Blueprint for the '/flask' prefix
+flask_blueprint = Blueprint('flaskapi', __name__, url_prefix='/flaskapi')
 
-# Define the model schema for Swagger documentation
-student_model = api.model('Student', {
-    'id': fields.Integer(required=True, description='The student ID'),
-    'name': fields.String(required=True, description='The student name'),
-    'age': fields.Integer(required=True, description='The student age'),
-})
+# Initialize the API with the Blueprint
+api = Api(
+    flask_blueprint,
+    version='1.0',
+    title='Student API',
+    description='API for student data',
+    doc='/docs',  # Serve Swagger UI under /flask/docs
+    static_url_path='/swaggerui',  # Serve Swagger assets
+)
 
-# Define a resource for fetching students
+app.register_blueprint(flask_blueprint)
+
+# Define API Endpoints
 @api.route('/students')
 class StudentList(Resource):
-    @api.marshal_with(student_model, as_list=True)  # Use registered model for response
-    @api.response(200, 'Success')  # Response code description
-    @api.response(500, 'Internal Server Error')  # Response code description
     def get(self):
-        """Fetch all students"""
-        try:
-            # Raw SQL query to fetch data
-            result = db.engine.execute("SELECT * FROM Students")
-            students = [dict(row) for row in result]
-            return students, 200
-        except Exception as e:
-            api.abort(500, f"An error occurred: {str(e)}")
+        result = db.engine.execute("SELECT * FROM Students")
+        students = [dict(row) for row in result]
+        return students
 
 if __name__ == '__main__':
     app.run(debug=True)
