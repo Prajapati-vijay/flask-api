@@ -17,7 +17,7 @@ app.config['SWAGGER'] = {
     'swagger': '2.0',
     'title': 'Student API',
     'uiversion': 3,
-    'specs_route': '/apidocs/'  # Specify the custom route
+    'specs_route': '/flaskapi/apidocs/'  # Specify the custom route
 }
 
 swagger = Swagger(app)
