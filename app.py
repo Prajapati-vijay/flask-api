@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 from flasgger import Swagger
@@ -6,23 +6,23 @@ from flasgger import Swagger
 app = Flask(__name__)
 
 # Replace with your SQL Server connection details
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://SA:vijay123@FINFLOCK2\\SQLEXPRESS/student?driver=ODBC+Driver+17+for+SQL+Server'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://SA:vijay123@host.docker.internal/student?driver=ODBC+Driver+17+for+SQL+Server'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# Flasgger configuration
+# Dynamically set the Swagger configuration based on the prefix
+SWAGGER_URL_PREFIX = '/fastapi'  # Your prefix
 app.config['SWAGGER'] = {
     'swagger': '2.0',
     'title': 'Student API',
     'uiversion': 3,
-    'specs_route': '/flaskapi/apidocs/'  # Specify the custom route
+    'specs_route': f'{SWAGGER_URL_PREFIX}/apidocs/'  # Use the prefix
 }
 
 swagger = Swagger(app)
 
-@app.route('/students', methods=['GET'])
+@app.route(f'{SWAGGER_URL_PREFIX}/students', methods=['GET'])
 def get_students():
     """
     Get all students
