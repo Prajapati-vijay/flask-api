@@ -17,7 +17,7 @@ app.config['STATIC_URL_PATH'] = '/myapp/static'
 db = SQLAlchemy(app)
 
 # Create API object
-api = Api(app, doc='/fast/apidocs')  # Swagger UI will be available at /apidocs
+api = Api(app, doc='/apidocs/')  # Swagger UI will be available at /apidocs
 
 # Define the student model (Swagger model)
 student_model = api.model('Student', {
