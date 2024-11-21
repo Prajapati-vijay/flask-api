@@ -19,7 +19,7 @@ db = SQLAlchemy(app)
 app.config["SWAGGER"] = {
     "uiversion": 3,
     "openapi": "3.0.2",
-    "static_url_path": f"flask/flasgger_static",  # Static files path
+    "static_url_path": f"/flask/flasgger_static",  # Static files path
     # "specs_route": f"{URL_PREFIX}/apidocs",  # Swagger UI route
 }
 swagger = Swagger(app)
