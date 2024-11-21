@@ -1,76 +1,63 @@
-from flask import Flask, jsonify, redirect, render_template
+from flask import Flask, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
-from flasgger import Swagger
-import os
+from flask_restx import Api, Resource, fields
+from flask import redirect
 
 app = Flask(__name__)
 
 # Replace with your SQL Server connection details
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://SA:vijay123@host.docker.internal/student?driver=ODBC+Driver+17+for+SQL+Server'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://SA:vijay123@FINFLOCK2\\SQLEXPRESS/student?driver=ODBC+Driver+17+for+SQL+Server'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-
+app.config['STATIC_URL_PATH'] = '/myapp/static'
 db = SQLAlchemy(app)
+@property
+def base_path(self):
+    return "/base/path"
 
-# Swagger configuration
-app.config["SWAGGER"] = {
-    "uiversion": 3,
-    "openapi": "3.0.2",
-    "static_url_path": "/flasgger_static",  # Static files path under /flasgger_static
-    "specs_route": "/apidocs",  # Swagger UI route under /apidocs
-}
-swagger = Swagger(app)
 
-# Define a custom static path for Swagger UI if needed
-@app.route("/flasgger_static/<path:filename>")
-def custom_swagger_static(filename):
-    return app.send_static_file(f"./swaggerui/{filename}")   
+Api.base_path = base_path
+# Create API object
+api = Api(app, doc='/fast/apidocs')  # Swagger UI will be available at /apidocs
 
-# @app.route('/')
-# def index():
-#     # Redirect to Swagger UI docs at /apidocs
-#     return redirect("/apidocs")
+# Define the student model (Swagger model)
+student_model = api.model('Student', {
+    'id': fields.Integer(description='The student ID'),
+    'name': fields.String(description='The student\'s name'),
+    'age': fields.Integer(description='The student\'s age')
+})
 
-@app.route('/students', methods=['GET'])
-def get_students():
-    """
-    Get all students
-    ---
-    responses:
-      200:
-        description: A list of students
-        schema:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: integer
-                description: The student ID
-              name:
-                type: string
-                description: The student's name
-              age:
-                type: integer
-                description: The student's age
-    """
-    sql = text("SELECT * FROM students")
-    result = db.session.execute(sql)
-    
-    # Get column names
-    columns = result.keys()
-    
-    # Convert each row into a dictionary
-    students = [dict(zip(columns, row)) for row in result]
-    
-    return jsonify(students)
+# Define the resource for `/students` endpoint
+@api.route('/students')
+class StudentList(Resource):
+    @api.doc('get_all_students')
+    @api.marshal_with(student_model, as_list=True)  # Marshals the response using student_model
+    def get(self):
+        """
+        Get all students
+        ---
+        responses:
+          200:
+            description: A list of students
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Student'
+        """
+        sql = text("SELECT * FROM students")
+        result = db.session.execute(sql)
+        
+        # Get column names
+        columns = result.keys()
+        
+        # Convert each row into a dictionary
+        students = [dict(zip(columns, row)) for row in result]
+        
+        return students
 
-# Custom UI route to serve the Swagger UI with relative paths
-@app.route("/apidocs")
-def custom_ui():
-    return render_template(
-        "swagger-ui.html", title="API Documentation", specs_url="./swagger.json"
-    )
+@app.route('/')
+def index():
+    return redirect('/apidocs')  # Redirect to Swagger UI documentation
 
 if __name__ == '__main__':
     app.run(debug=True)
