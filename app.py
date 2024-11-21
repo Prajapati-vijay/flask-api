@@ -13,14 +13,14 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-URL_PREFIX = os.getenv("URL_PREFIX", "/flaskapi")
+# URL_PREFIX = os.getenv("URL_PREFIX", "/flaskapi")
 
 # Swagger configuration
 app.config["SWAGGER"] = {
     "uiversion": 3,
     "openapi": "3.0.2",
-    "static_url_path": f"{URL_PREFIX}/flasgger_static",  # Static files path
-    "specs_route": f"{URL_PREFIX}/apidocs",  # Swagger UI route
+    # "static_url_path": f"{URL_PREFIX}/flasgger_static",  # Static files path
+    # "specs_route": f"{URL_PREFIX}/apidocs",  # Swagger UI route
 }
 swagger = Swagger(app)
 
