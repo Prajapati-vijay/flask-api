@@ -3,6 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 from flask_restx import Api, Resource, fields
 from flask import redirect
+from flask_restx.apidoc import apidoc
+
+
+apidoc.static_url_path = "/fast/swaggerui"
 
 app = Flask(__name__)
 
@@ -11,12 +15,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://SA:vijay123@FINFLOCK2\\S
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['STATIC_URL_PATH'] = '/myapp/static'
 db = SQLAlchemy(app)
-@property
-def base_path(self):
-    return "/base/path"
 
-
-Api.base_path = base_path
 # Create API object
 api = Api(app, doc='/fast/apidocs')  # Swagger UI will be available at /apidocs
 
