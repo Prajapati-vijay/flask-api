@@ -17,7 +17,7 @@ app.config['SWAGGER'] = {
     'uiversion': 3,
     'openapi': '3.0.2',
     'static_url_path': '/flask/flasgger_static',
-    'specs_route': '/flask/apidocs'  # Set the path for static files
+    # 'specs_route': '/flask/apidocs'  # Set the path for static files
 }
 swagger = Swagger(app)
 
