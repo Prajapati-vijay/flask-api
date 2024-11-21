@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import text
 from flasgger import Swagger
 from flask import redirect
+import os
 
 app = Flask(__name__)
 
@@ -12,12 +13,14 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# Set Swagger UI URL to root `/`
-app.config['SWAGGER'] = {
-    'uiversion': 3,
-    'openapi': '3.0.2',
-    'static_url_path': '/flask/flasgger_static',
-    # 'specs_route': '/flask/apidocs'  # Set the path for static files
+URL_PREFIX = os.getenv("URL_PREFIX", "/flaskapi")
+
+# Swagger configuration
+app.config["SWAGGER"] = {
+    "uiversion": 3,
+    "openapi": "3.0.2",
+    "static_url_path": f"{URL_PREFIX}/flasgger_static",  # Static files path
+    "specs_route": f"{URL_PREFIX}/apidocs",  # Swagger UI route
 }
 swagger = Swagger(app)
 
