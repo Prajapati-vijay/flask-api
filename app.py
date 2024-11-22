@@ -14,8 +14,8 @@ app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_port=1, x_for=1, x_host=1, x_
 # Replace with your SQL Server connection details
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://SA:vijay123@host.docker.internal/student?driver=ODBC+Driver+17+for+SQL+Server'
 # app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# PostgreSQL URI for connection (adjust with your credentials)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@172.21.0.3:5432/student'
+# PostgreSQL URI for connection (adjust with your credentials)    
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@172.22.0.2:5432/student'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 # app.config['STATIC_URL_PATH'] = '/myapp/static'
 db = SQLAlchemy(app)
