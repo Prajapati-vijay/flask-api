@@ -5,12 +5,12 @@ from flask_restx import Api, Resource, fields
 from flask import redirect
 from flask_restx.apidoc import apidoc
 import os
-
-static_url_path = os.getenv('STATIC_URL_PATH', '/flask')
-apidoc.static_url_path = static_url_path
+from werkzeug.middleware.proxy_fix import ProxyFix
+# static_url_path = os.getenv('STATIC_URL_PATH', '/flask')
+# apidoc.static_url_path = static_url_path
 
 app = Flask(__name__)
-
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_port=1, x_for=1, x_host=1, x_prefix=1)
 # Replace with your SQL Server connection details
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://SA:vijay123@FINFLOCK2\\SQLEXPRESS/student?driver=ODBC+Driver+17+for+SQL+Server'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
