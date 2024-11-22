@@ -6,7 +6,7 @@ from flask import redirect
 from flask_restx.apidoc import apidoc
 import os
 
-static_url_path = os.getenv('STATIC_URL_PATH', '/static')
+static_url_path = os.getenv('STATIC_URL_PATH', '/flask')
 apidoc.static_url_path = static_url_path
 
 app = Flask(__name__)
@@ -14,7 +14,7 @@ app = Flask(__name__)
 # Replace with your SQL Server connection details
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://SA:vijay123@FINFLOCK2\\SQLEXPRESS/student?driver=ODBC+Driver+17+for+SQL+Server'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['STATIC_URL_PATH'] = '/myapp/static'
+# app.config['STATIC_URL_PATH'] = '/myapp/static'
 db = SQLAlchemy(app)
 
 # Create API object
@@ -55,9 +55,9 @@ class StudentList(Resource):
         
         return students
 
-@app.route('/')
-def index():
-    return redirect('/apidocs')  # Redirect to Swagger UI documentation
+# @app.route('/')
+# def index():
+#     return redirect('/apidocs')  # Redirect to Swagger UI documentation
 
 if __name__ == '__main__':
     app.run(debug=True)
