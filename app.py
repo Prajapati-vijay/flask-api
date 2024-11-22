@@ -4,9 +4,10 @@ from sqlalchemy import text
 from flask_restx import Api, Resource, fields
 from flask import redirect
 from flask_restx.apidoc import apidoc
+import os
 
-
-apidoc.static_url_path = "/swaggerui"
+static_url_path = os.getenv('STATIC_URL_PATH', '/static')
+apidoc.static_url_path = static_url_path
 
 app = Flask(__name__)
 
