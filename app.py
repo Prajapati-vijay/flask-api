@@ -6,14 +6,14 @@ from flask import redirect
 from flask_restx.apidoc import apidoc
 
 
-apidoc.static_url_path = "./swaggerui"   
+apidoc.static_url_path = "/swaggerui"
 
 app = Flask(__name__)
 
 # Replace with your SQL Server connection details
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://SA:vijay123@FINFLOCK2\\SQLEXPRESS/student?driver=ODBC+Driver+17+for+SQL+Server'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# app.config['STATIC_URL_PATH'] = '/myapp/static'
+app.config['STATIC_URL_PATH'] = '/myapp/static'
 db = SQLAlchemy(app)
 
 # Create API object
