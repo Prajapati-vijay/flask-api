@@ -10,7 +10,7 @@ from werkzeug.middleware.proxy_fix import ProxyFix
 # apidoc.static_url_path = static_url_path
 
 app = Flask(__name__)
-# app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_port=1, x_for=1, x_host=1, x_prefix=1)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_port=1, x_for=1, x_host=1, x_prefix=1)
 # Replace with your SQL Server connection details
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mssql+pyodbc://SA:Vijay123456@sqlserver/student?driver=ODBC+Driver+17+for+SQL+Server'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
