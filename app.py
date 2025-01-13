@@ -7,7 +7,7 @@ app = Flask(__name__)
 def fetch_userauth_data():
     try:
         # Request data from the userauth endpoint
-        response = requests.get("http://localhost:8082/userauth/")
+        response = requests.get("https://test-quant.vaneck.com/userauth/")
         response.raise_for_status()  # Raise an exception for HTTP errors
 
         # Parse the JSON response
