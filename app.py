@@ -1,30 +1,15 @@
-from flask import Flask, jsonify, render_template_string
-import requests
+from flask import Flask, request
 
 app = Flask(__name__)
 
 @app.route('/')
-def fetch_userauth_data():
-    try:
-        # Request data from the userauth endpoint
-        response = requests.get("https://test-quant.vaneck.com/userauth/")
-        response.raise_for_status()  # Raise an exception for HTTP errors
-
-        # Parse the JSON response
-        data = response.json()
-        return render_template_string("""
-            <!DOCTYPE html>
-            <html>
-            <head><title>User Auth Data</title></head>
-            <body>
-                <h1>User Auth API Data</h1>
-                <pre>{{ data }}</pre>
-            </body>
-            </html>
-        """, data=data)
-    except requests.exceptions.RequestException as e:
-        # Handle errors in making the request
-        return jsonify({"error": str(e)}), 500
+def get_cookies():
+    # Access cookies from the request
+    username = request.cookies.get('username')
+    email = request.cookies.get('email')
+    authorize = request.cookies.get('authorize')
+    
+    return f'Username: {username}, Email: {email}, Authorize: {authorize}'
 
 if __name__ == '__main__':
     app.run(debug=True)
