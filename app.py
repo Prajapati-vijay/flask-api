@@ -1,15 +1,14 @@
-from flask import Flask, request
+from flask import Flask
 
 app = Flask(__name__)
 
 @app.route('/')
-def get_cookies():
-    # Access cookies from the request
-    username = request.cookies.get('username')
-    email = request.cookies.get('email')
-    authorize = request.cookies.get('authorize')
-    
-    return f'Username: {username}, Email: {email}, Authorize: {authorize}'
+def hello_world():
+    return 'Hello from the first route!'
+
+@app.route('/hello')
+def hello_hello():
+    return 'Hello from the second route!'
 
 if __name__ == '__main__':
     app.run(debug=True)
