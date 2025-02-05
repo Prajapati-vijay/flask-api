@@ -1,10 +1,13 @@
 from flask import Flask
+import os
 
 app = Flask(__name__)
 
 @app.route('/')
 def hello_world():
-    return 'Hello from the first route!'
+    # Fetch the environment variable "SENV" and default to "NOT FOUND" if it does not exist
+    environ = os.getenv("SENV", "NOT FOUND")
+    return f'Hello from the first route! Environment variable SENV: {environ}'
 
 @app.route('/hello')
 def hello_hello():
