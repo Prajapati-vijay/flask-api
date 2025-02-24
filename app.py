@@ -1,17 +1,19 @@
-from flask import Flask
-import os
+from flask import Flask, jsonify, request
+import requests
 
 app = Flask(__name__)
 
-@app.route('/')
-def hello_world():
-    # Fetch the environment variable "SENV" and default to "NOT FOUND" if it does not exist
-    environ = os.getenv("ENV", "NOT FOUND")
-    return f'Hello from the first route! Environment variable SENV: {environ}'
+DJANGO_API_URL = "https://prod-quant.vaneck.com/user_data/"
 
-@app.route('/hello')
-def hello_hello():
-    return 'Hello from the second route!'
+# Create a session object to persist cookies
+session = requests.Session()
 
-if __name__ == '__main__':
+@app.route("/get_user_data", methods=["GET"])
+def get_user_data():
+    # Automatically forward all cookies from the Flask request to the Django API
+    response = session.get(DJANGO_API_URL, cookies=request.cookies)
+
+    return jsonify(response.json())
+
+if __name__ == "__main__":
     app.run(debug=True)
